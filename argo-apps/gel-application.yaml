@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-simple-scalable 
+  namespace: argocd
+spec:
+  destination:
+    namespace: gel    
+    server: https://kubernetes.default.svc
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 1.8.11 
+      chart: loki-simple-scalable  
+      helm:
+        valueFiles:
+          - $values/manifests/gel-overrides.yaml
+    - repoURL: https://github.com/pbmoses/gel-values.git 
+      targetRevision: HEAD 
+      ref: values
+  project: default

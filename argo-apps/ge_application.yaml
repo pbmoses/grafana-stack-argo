@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-enterprise
+  namespace: argocd
+spec:
+  destination:
+    namespace: grafana-prod    
+    server: https://kubernetes.default.svc
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 8.5.2
+      chart: grafana
+      helm:
+        valueFiles:
+          - $values/manifest-examples/ge-overrides.yaml
+    - repoURL: https://github.com/pbmoses/ge-values.git
+      targetRevision: HEAD 
+      ref: values
+  project: default
