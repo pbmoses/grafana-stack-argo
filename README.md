@@ -62,7 +62,7 @@ spec:
   project: default
 ```
 ### The overrides file
-[Values that you have determined are best for your environment](./manifests)
+[Values that you have determined are best for your environment](./values)
 
 Deploy each of the secrets `kubectl create -f <manifest>`. You can either apply the ArgoCD application imperatively `kubectl create -f application.yaml`or also place this in a repo to allow ArgoCD to sync from it, beginning an app of apps pattern. Your values file should be present in the source that ArgoCD is pointing to. 
 
