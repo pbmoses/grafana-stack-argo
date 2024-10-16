@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: loki-simple-scalable 
+  name: mimir-distributed 
   namespace: argocd
 spec:
   destination:
-    namespace: gel    
+    namespace: gem    
     server: https://kubernetes.default.svc
   sources:
     - repoURL: https://grafana.github.io/helm-charts
-      targetRevision: 1.8.11 
-      chart: loki-simple-scalable  
+      targetRevision: 5.4.1 
+      chart: mimir-distributed 
       helm:
         valueFiles:
-          - $values/manifests/gel-overrides.yaml
-    - repoURL: https://github.com/pbmoses/gel-values.git 
+          - $values/values/mimir-overrides.yaml
+    - repoURL: https://github.com/pbmoses/grafana-stack-argo.git 
       targetRevision: HEAD 
       ref: values
   project: default

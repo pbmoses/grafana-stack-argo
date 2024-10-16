@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mimir-distributed 
+  name: grafana-enterprise
   namespace: argocd
 spec:
   destination:
-    namespace: gem    
+    namespace: grafana-prod
     server: https://kubernetes.default.svc
   sources:
     - repoURL: https://grafana.github.io/helm-charts
-      targetRevision: 5.4.1 
-      chart: mimir-distributed 
+      targetRevision: 8.5.2
+      chart: grafana
       helm:
         valueFiles:
-          - $values/manifests/gem-overrides.yaml
-    - repoURL: https://github.com/pbmoses/gem-values.git 
+          - $values/values/grafana-viz-overrides.yaml
+    - repoURL: https://github.com/pbmoses/agi-stack-argo.git
       targetRevision: HEAD 
       ref: values
   project: default
