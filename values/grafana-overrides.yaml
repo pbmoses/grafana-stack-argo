@@ -529,11 +529,11 @@ enableServiceLinks: true
 
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts: 
-  - name: ge-license-grafana-prod 
-    secretName: ge-license 
-    mountPath: /etc/grafana/license
-    readOnly: true
+extraSecretMounts: {}
+#  - name: ge-license-grafana-prod 
+#    secretName: ge-license 
+#    mountPath: /etc/grafana/license
+#    readOnly: true
   # - name: secret-files
   #   mountPath: /etc/secrets
   #   secretName: grafana-secret-files
