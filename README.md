@@ -4,6 +4,10 @@ A rapidly redployable stack should be present in any enterprise environment, the
 
 ### OpenShift Users. There are multiple changes to allow these charts to work on OpenShift, from skipping CRDs to user/security policies. That'll get done when I have time and/or if someone wants to provide an OpenShift cluster (I have turned my home cluster off due to electricity costs).  
 
+
+### Intermediate or above Kubernetes knowledge is assumed, if you've made it this far. 
+
+
 ## The Why
 The core Helm charts are already created, we simply point the ACD app to the main charts and to our values file. Efficiency, repeatability and accountability. Utilizing GitOps approaches, one can (theoretically) lock down a cluster with all actions that take place doing so only after a peer review and merge request has been completed and approved. I have worked with large enterprise customers where only a handful of people had direct cluster access, all changes took place vis GitOps; Branch, edit, peer review, merge request and move forward. The "oops" moments were not completely gone but were reduced changes (if not done with direct cluster/machine access) were auditable in a single place (Git). 
 
