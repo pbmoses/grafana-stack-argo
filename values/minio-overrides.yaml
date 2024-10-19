@@ -1,0 +1,44 @@
+---
+# https://github.com/minio/minio/tree/master/helm/minio
+# helm upgrade --install minio -n gem minio/minio -f 
+mode: distributed 
+
+##rootUser: minio
+##rootPassword: 
+
+existingSecret: minio-root 
+## | Chart var             | .data.<key> in Secret    |
+## |:----------------------|:-------------------------|
+## | rootUser              | rootUser                 |
+## | rootPassword          | rootPassword             |
+##
+
+users:
+#  - accessKey: enterprise-metrics
+#    secretKey:
+#    policy: readwrite
+  - accessKey: enterprise-metrics
+    existingSecret: minio-user 
+    existingSecretKey: password
+    policy: readwrite
+
+buckets:
+  - name: enterprise-metrics-tsdb
+    policy: public
+    purge: false
+  - name: enterprise-metrics-admin
+    policy: public
+    purge: false
+  - name: enterprise-metrics-ruler
+    policy: public
+    purge: false
+  - name: enterprise-metrics-alertmanager
+    policy: public
+    purge: false
+
+replicas: 4
+
+persistence:
+  enabled: true
+  size: 10Gi
+

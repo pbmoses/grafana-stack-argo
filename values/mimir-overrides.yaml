@@ -1,0 +1,371 @@
+# These values configure the Grafana Mimir or Grafana Enterprise Metrics cluster
+# for a more production-ready setup. The setup targets 70% CPU and memory utilization
+# so that the cluster has room to grow. The resource requests reflect 70% utilization
+# and the limits reflect 100% utilization. The values do not set CPU limits,
+# because CPU limits have caused severe issues elsewhere, so we don't apply any in our helm chart:
+# see https://engineering.indeedblog.com/blog/2019/12/unthrottled-fixing-cpu-limits-in-the-cloud/
+# If you require CPU limits for billing purposes see capped-small.yaml
+#
+# These values are suitable for ingestion of ~1M series and scrape interval of 15s.
+# This implies ingestion rate of around 66000 samples per second.
+#
+# Query requirements can vary dramatically depending on query rate and query
+# ranges. The values here satisfy a "usual" query load of around 5 queries per second
+# as seen from our production clusters at this scale.
+#
+# The values in this file also add podAntiAffinity rules for ingesters and store-gateways.
+# The rules ensure that the replicas of the same component are not scheduled on the same
+# Kubernetes Node. Zone-aware replication is enabled by default on new installation.
+# Refer to [Migrate from single zone to zone-aware replication with Helm](https://grafana.com/docs/mimir/latest/migration-guide/migrating-from-single-zone-with-helm) and
+# [Zone-Aware Replication](https://grafana.com/docs/mimir/latest/configure/configure-zone-aware-replication/)
+# for more information.
+#
+# MinIO is no longer enabled, and you are encouraged to use your cloud providers
+# object storage service such as S3 or GCS.
+
+global:
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-bucket-secret
+  podAnnotations:
+    bucketSecretVersion: "0"
+
+
+admin_api:
+  replicas: 1
+
+# Configuration for alertmanager
+alertmanager:
+  enabled: true
+  persistentVolume:
+    enabled: true
+  replicas: 1
+  statefulSet:
+    enabled: true
+
+compactor:
+  persistentVolume:
+    size: 10Gi
+  resources:
+    limits:
+      memory: 2.1Gi
+    requests:
+      cpu: 1
+      memory: 1.5Gi
+
+distributor:
+  replicas: 2
+  resources:
+    limits:
+      memory: 6Gi
+    requests:
+      cpu: 2
+      memory: 4Gi
+
+ingester:
+  persistentVolume:
+    size: 10Gi
+  replicas: 3
+  resources:
+    limits:
+      memory: 12Gi
+    requests:
+      cpu: 3.5
+      memory: 4Gi
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target # support for enterprise.legacyLabels
+                operator: In
+                values:
+                  - ingester
+          topologyKey: 'kubernetes.io/hostname'
+
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - ingester
+          topologyKey: 'kubernetes.io/hostname'
+
+  zoneAwareReplication:
+    topologyKey: 'kubernetes.io/hostname'
+
+admin-cache:
+  enabled: true
+  replicas: 2
+
+chunks-cache:
+  enabled: true
+  replicas: 2
+
+index-cache:
+  enabled: true
+  replicas: 3
+
+metadata-cache:
+  enabled: true
+
+results-cache:
+  enabled: true
+  replicas: 2
+
+minio:
+  enabled: false 
+
+overrides_exporter:
+  replicas: 1
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+querier:
+  kedaAutoscaling:
+    enabled: true
+    # -- preserveReplicas gives you the option to migrate from non-autoscaled to autoscaled deployments without losing replicas. When set to true, the replica fields in the compo
+    # For futher details see [helm: autoscaling migration procedure](https://github.com/grafana/mimir/issues/7367)
+    preserveReplicas: false
+    minReplicaCount: 1
+    maxReplicaCount: 10
+    querySchedulerInflightRequestsThreshold: 12
+    # -- predictiveScalingEnabled scales up the querier based on the inflight requests in the past.
+    # This helps with scaling up for predictable traffic patterns and minimizing HTTP 429 responses due to filled query queues.
+    # Due to false positive items it can increase the querier TCO.
+    predictiveScalingEnabled: false
+    # -- The period to consider when considering scheduler metrics for predictive scaling.
+    # This is usually slightly lower than the period of the repeating query events to give scaling up lead time.
+    predictiveScalingPeriod: 6d23h30m
+    # -- The time range to consider when considering scheduler metrics for predictive scaling.
+    # For example: if lookback is 30m and period is 6d23h30m,
+    # the querier will scale based on the maximum inflight queries between 6d23h30m and 7d ago.
+    predictiveScalingLookback: 30m
+    behavior:
+      scaleDown:
+        policies:
+          - periodSeconds: 120
+            type: Percent
+            value: 10
+        stabilizationWindowSeconds: 600
+      scaleUp:
+        policies:
+          - periodSeconds: 120
+            type: Percent
+            value: 50
+          - periodSeconds: 120
+            type: Pods
+            value: 15
+        stabilizationWindowSeconds: 60
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - querier
+            topologyKey: 'kubernetes.io/hostname'
+
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 180
+
+  tolerations: []
+  podDisruptionBudget: {}
+  initContainers: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraPorts: []
+  env: []
+
+query_frontend:
+  replicas: 1
+  resources:
+    limits:
+      memory: 2.8Gi
+    requests:
+      cpu: 2
+      memory: 2Gi
+
+ruler:
+  replicas: 1
+  resources:
+    limits:
+      memory: 2.8Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+
+store_gateway:
+  persistentVolume:
+    size: 10Gi
+  replicas: 3
+  resources:
+    limits:
+      memory: 2.1Gi
+    requests:
+      cpu: 1
+      memory: 1.5Gi
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target # support for enterprise.legacyLabels
+                operator: In
+                values:
+                  - store-gateway
+          topologyKey: 'kubernetes.io/hostname'
+
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - store-gateway
+          topologyKey: 'kubernetes.io/hostname'
+  zoneAwareReplication:
+    topologyKey: 'kubernetes.io/hostname'
+
+nginx:
+  replicas: 1
+  resources:
+    limits:
+      memory: 731Mi
+    requests:
+      cpu: 1
+      memory: 512Mi
+
+# Grafana Enterprise Metrics feature related
+admin_api:
+  replicas: 1
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 64Mi
+
+gateway:
+  replicas: 1
+  resources:
+    limits:
+      memory: 731Mi
+    requests:
+      cpu: 1
+      memory: 512Mi
+
+# metaMonitoring Configuration
+# By Default all monitoring is disabled in this chart can be configured separately
+metaMonitoring:
+  serviceMonitor:
+    enabled: false
+
+  # Rules for the Prometheus Operator
+  prometheusRule:
+    enabled: false
+    mimirAlerts: false
+    mimirRules: false
+
+  # metaMonitoringAgent configures the built in Grafana Agent that can scrape metrics and logs
+  # and send them to a local or remote destination
+  grafanaAgent:
+    enabled: false
+
+    installOperator: false
+
+    logs:
+      enabled: false
+
+    metrics:
+      enabled: false
+
+      scrapeK8s:
+        enabled: false
+mimir:
+  # -- Base config file for Grafana Mimir and Grafana Enterprise Metrics. Contains Helm templates that are evaluated at install/upgrade.
+  # To modify the resulting configuration, either copy and alter 'mimir.config' as a whole or use the 'mimir.structuredConfig' to add and modify
+  # certain YAML elements.
+  structuredConfig:
+    # admin_client storage configuration
+## admin_client:
+##   storage:
+##     type: s3
+##     s3:
+##       access_key_id: enterprise-metrics
+##       bucket_name: enterprise-metrics-admin
+##       endpoint: minio.metrics.svc.cluster.local:9000
+##       insecure: true
+##       secret_access_key: supersecret
+## # alertmanager storage configuration
+    alertmanager_storage:
+      backend: s3
+      s3:
+        access_key_id: "enterprise-metrics" 
+        bucket_name: enterprise-metrics-alertmanager
+        endpoint: minio.metrics.svc.cluster.local:9000
+        insecure: true
+        secret_access_key: "${MIMIRS3KEY}"
+    # blocks storage configuration
+    blocks_storage:
+      backend: s3
+      s3:
+        access_key_id: "enterprise-metrics"  
+        bucket_name: enterprise-metrics-tsdb
+        endpoint: minio.metrics.svc.cluster.local:9000
+        insecure: true
+        secret_access_key: "${MIMIRS3KEY}"
+    # ruler storage configuration
+    ruler_storage:
+      backend: s3
+      s3:
+        access_key_id: "enterprise-metrics"  
+        bucket_name: enterprise-metrics-ruler
+        endpoint: minio.metrics.svc.cluster.local:9000
+        insecure: true
+        secret_access_key: "${MIMIRS3KEY}" 
