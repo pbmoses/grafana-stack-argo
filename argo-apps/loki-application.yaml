@@ -13,8 +13,8 @@ spec:
       chart: loki-simple-scalable  
       helm:
         valueFiles:
-          - $values/valuesloki-overrides.yaml
-    - repoURL: https://github.com/pbmoses/ggrafana-stack-argo.git 
+          - $values/values/loki-overrides.yaml
+    - repoURL: https://github.com/pbmoses/grafana-stack-argo.git 
       targetRevision: HEAD 
       ref: values
   project: default

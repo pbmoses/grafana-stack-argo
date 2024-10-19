@@ -1,3 +1,9 @@
+global:
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-bucket-secret
+  podAnnotations:
+    bucketSecretVersion: "0"
 loki:
 #  schemaConfig:
  #   configs:

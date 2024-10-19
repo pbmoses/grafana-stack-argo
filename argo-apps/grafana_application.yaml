@@ -13,8 +13,8 @@ spec:
       chart: grafana
       helm:
         valueFiles:
-          - $values/values/grafana-viz-overrides.yaml
-    - repoURL: https://github.com/pbmoses/agi-stack-argo.git
+          - $values/values/grafana-overrides.yaml
+    - repoURL: https://github.com/pbmoses/grafana-stack-argo.git
       targetRevision: HEAD 
       ref: values
   project: default
