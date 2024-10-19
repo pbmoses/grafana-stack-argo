@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: gem    
+    namespace: mimir    
     server: https://kubernetes.default.svc
   sources:
     - repoURL: https://grafana.github.io/helm-charts
