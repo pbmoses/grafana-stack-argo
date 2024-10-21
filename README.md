@@ -9,19 +9,20 @@ A rapidly redployable stack should be present in any enterprise environment, the
 
 
 ## The Why
-The core Helm charts are already created, we simply point the ACD app to the main charts and to our values file. Efficiency, repeatability and accountability. Utilizing GitOps approaches, one can (theoretically) lock down a cluster with all actions that take place doing so only after a peer review and merge request has been completed and approved. I have worked with large enterprise customers where only a handful of people had direct cluster access, all changes took place vis GitOps; Branch, edit, peer review, merge request and move forward. The "oops" moments were not completely gone but were reduced changes (if not done with direct cluster/machine access) were auditable in a single place (Git). 
+The core Helm charts are already created, we simply point the ACD app to the main charts and to our values file. Efficiency, repeatability and accountability. Utilizing GitOps approaches, one can (theoretically) lock down a cluster with all actions that take place doing so only after a peer review and merge request has been completed and approved. I have worked with large enterprise customers where only a handful of people had direct cluster access, all changes took place via GitOps; Branch, edit, peer review, merge request and move forward. The "oops" moments were not completely gone but were reduced changes (if not done with direct cluster/machine access) were auditable in a single place (Git). 
 
 ## End Goals
 In the end, I would like to setup 3 demo paths, the stack, the datasources and the dashboards. As will all things OpenSource, there are many ways these can be done. The end objective is to be sure you learn and come away from this with more confidence and knowledge for your day to day computing experiences. 
 
-The demos rely on 2 base items:
+The demos rely on the following:
 - A working Kubernetes cluster of your choice.
 - ArgoCD installed and working properly.
   
 ## For a minimal Grafana functioning setup, you will usually need various manifests:
 
 - A secret for your admin user and password (utilize the External Secret Operator for full workflows, this demo assumes manual creation of the secrets.
-- The ArgoCD application utilizing mulltiple sources (one pointing to the Grafana Helm chart, one to this directory with overrides)
+  - Note that when you base64 your user/pass for the secret you should use `-n`
+- The ArgoCD application utilizing mulltiple sources (one pointing to the Grafana Helm chart, one to the directory with overrides)
 - Your Helm overrides file
 
 Examples of the manifests can be found below. [Secret storage in Kubernetes is not natively secure](https://kubernetes.io/docs/concepts/configuration/secret/#:~:text=%23%20values%20are%20base64,level%20of%20confidentiality), secrets are merely base64 encoded and should never be stored in Git. 
