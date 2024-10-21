@@ -40,7 +40,7 @@ metadata:
 type: Opaque
 ```
 
-### The minio bucket secret (each namespace, mimir. tempo, loki)
+### The minio bucket secret (each namespace, mimir, tempo, loki)
 ```
 apiVersion: v1
 data:
