@@ -40,7 +40,7 @@ metadata:
 type: Opaque
 ```
 
-### The minio bucket secret (each namespace, mimir, tempo, loki)
+### The minio bucket secret (each namespace, mimir, tempo, loki - name accordingly)
 ```
 apiVersion: v1
 data:
@@ -56,11 +56,11 @@ type: Opaque
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana-enterprise
+  name: mimir
   namespace: argocd
 spec:
   destination:  ### where this will be deployed on your cluster
-    namespace: grafana-prod    
+    namespace: mimir 
     server: https://kubernetes.default.svc
   sources:
 ###maintained main Helm chart directory
@@ -71,7 +71,7 @@ spec:
       helm:
 ###this will be YOUR git repo path with your overrides file
         valueFiles:
-          - $values/charts/grafana/ge-overrides.yaml
+          - $values/charts/grafana/mimir-overrides.yaml
 ### Your Git Repo 
     - repoURL: https://github.com/pbmoses/helm-charts.git
       targetRevision: HEAD 
