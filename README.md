@@ -56,24 +56,20 @@ type: Opaque
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mimir
+  name: mimir-distributed 
   namespace: argocd
 spec:
-  destination:  ### where this will be deployed on your cluster
-    namespace: mimir 
+  destination:
+    namespace: mimir    
     server: https://kubernetes.default.svc
   sources:
-###maintained main Helm chart directory
     - repoURL: https://grafana.github.io/helm-charts
-###chart version
-      targetRevision: 8.5.2
-      chart: grafana
+      targetRevision: 5.4.1 
+      chart: mimir-distributed 
       helm:
-###this will be YOUR git repo path with your overrides file
         valueFiles:
-          - $values/charts/grafana/mimir-overrides.yaml
-### Your Git Repo 
-    - repoURL: https://github.com/pbmoses/helm-charts.git
+          - $values/values/mimir-overrides.yaml
+    - repoURL: https://github.com/pbmoses/grafana-stack-argo.git 
       targetRevision: HEAD 
       ref: values
   project: default
