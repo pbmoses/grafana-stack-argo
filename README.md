@@ -2,7 +2,7 @@
 To note: These repos were developed for rapid redeployment of the Grafana based on the repo maintainers knowledge and experience around Kubernetes, this is not official Grafana Documentation. This repo is a bases for the Grafana OSS stack, there are sister repos for the enterprise versions. 
 A rapidly redployable stack should be present in any enterprise environment, these examples can be used as a foundation but should not be the be all end all of MTTR. 
 
-### OpenShift Users. There are multiple changes to allow these charts to work on OpenShift, from skipping CRDs to user/security policies. That'll get done when I have time and/or if someone wants to provide an OpenShift cluster (I have turned my home cluster off due to electricity costs).  
+### OpenShift Users. There are multiple changes needed to allow these charts to work on OpenShift, from skipping CRDs to user/security policies. 
 
 
 ### Intermediate or above Kubernetes knowledge is assumed, if you've made it this far. 
