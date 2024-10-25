@@ -20,7 +20,7 @@ The demos rely on the following:
   
 ## For a minimal Grafana functioning setup, you will usually need various manifests:
 
-- A secret for your admin user and password (utilize the External Secret Operator for full workflows, this demo assumes manual creation of the secrets.
+- A secret for your admin user and password (utilize the External Secret Operator for full workflows), this demo assumes manual creation of the secrets.
   - Note that when you base64 your user/pass for the secret you should use `-n`
 - The ArgoCD application utilizing mulltiple sources (one pointing to the Grafana Helm chart, one to the directory with overrides)
 - Your Helm overrides file
