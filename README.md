@@ -1,4 +1,4 @@
-# This repo was created to deploy the Grafana Stack via Helm with custom values from ArgoCD utilizing multiple sources. This demo utilizes a GCP Autopilot cluster. 
+# This repo was created to deploy the Grafana Stack via Helm with custom values from ArgoCD utilizing multiple sources. This demo utilizes a GKE Autopilot cluster. 
 To note: These repos were developed for rapid redeployment of the Grafana based on the repo maintainers knowledge and experience around Kubernetes, this is not official Grafana Documentation. This repo is a base for the Grafana OSS stack, there are sister repos for the enterprise versions. 
 A rapidly redployable stack should be present in any enterprise environment, these examples can be used as a foundation but should not be the be all end all of MTTR. This is in no way for production use nor is it official Grafana Labs documentation. 
 
