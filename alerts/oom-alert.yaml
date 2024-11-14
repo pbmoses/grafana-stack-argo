@@ -1,0 +1,85 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: oom-alert
+      folder: restart-alert
+      interval: 1m
+      rules:
+        - uid: ee06agvm67qioc
+          title: oom-alert-alloy-namespace
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+###your datasource
+              datasourceUid: grafanacloud-prom
+              model:
+                editorMode: code
+                expr: 'sum by(container) (increase(kube_pod_container_status_restarts_total{namespace="alloy"}[10m])) '
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: count
+                refId: B
+                type: reduce
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: Alloy containers have restarted in the Alloy namespace
+            summary: Container Restarts
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
