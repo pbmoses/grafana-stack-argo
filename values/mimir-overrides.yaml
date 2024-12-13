@@ -34,6 +34,16 @@ global:
 admin_api:
   replicas: 1
 
+
+###THE FOLLOWING IS FOR ENT. IF YOU USE< OPENSOURCE, SET TO FALSE##
+enterprise:
+  # Enable enterprise features. License must be provided, nginx gateway is not installed, instead
+  # the enterprise gateway is used.
+  enabled: true
+license:
+  external: true
+  secretName: gem-license
+
 # Configuration for alertmanager
 alertmanager:
   enabled: true
@@ -72,24 +82,24 @@ ingester:
     requests:
       cpu: 3.5
       memory: 4Gi
-##  affinity:
-##    podAntiAffinity:
- ##     requiredDuringSchedulingIgnoredDuringExecution:
- ##       - labelSelector:
- ##           matchExpressions:
- ##             - key: target # support for enterprise.legacyLabels
- ##               operator: In
- ##               values:
- ##                 - ingester
- ##         topologyKey: 'kubernetes.io/hostname'
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target # support for enterprise.legacyLabels
+                operator: In
+                values:
+                  - ingester
+          topologyKey: 'kubernetes.io/hostname'
 
- ##       - labelSelector:
- ##           matchExpressions:
- ##             - key: app.kubernetes.io/component
- ##               operator: In
- ##               values:
- ##                 - ingester
- ##         topologyKey: 'kubernetes.io/hostname'
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - ingester
+          topologyKey: 'kubernetes.io/hostname'
 
   zoneAwareReplication:
     topologyKey: 'kubernetes.io/hostname'
