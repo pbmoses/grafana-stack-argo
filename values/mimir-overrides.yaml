@@ -351,7 +351,7 @@ mimir:
          bucket_name: enterprise-metrics-admin
          endpoint: minio.metrics.svc.cluster.local:9000
          insecure: true
-         secret_access_key: supersecret
+         secret_access_key: "${MIMIRS3KEY}"
 ## # alertmanager storage configuration
     alertmanager_storage:
       backend: s3
