@@ -343,15 +343,15 @@ mimir:
   # certain YAML elements.
   structuredConfig:
     # admin_client storage configuration
-  admin_client:
-   storage:
-     type: s3
-     s3:
-       access_key_id: enterprise-metrics
-       bucket_name: enterprise-metrics-admin
-       endpoint: minio.metrics.svc.cluster.local:9000
-       insecure: true
-       secret_access_key: supersecret
+    admin_client:
+     storage:
+       type: s3
+       s3:
+         access_key_id: enterprise-metrics
+         bucket_name: enterprise-metrics-admin
+         endpoint: minio.metrics.svc.cluster.local:9000
+         insecure: true
+         secret_access_key: supersecret
 ## # alertmanager storage configuration
     alertmanager_storage:
       backend: s3
