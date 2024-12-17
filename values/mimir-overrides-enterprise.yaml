@@ -343,6 +343,18 @@ mimir:
   # certain YAML elements.
   structuredConfig:
     # admin_client storage configuration
+    instrumentation:
+      distributor_client:
+        tls_enabled: true
+        tls_cert_path: /path/to/cert
+        tls_key_path: /path/to/key
+        tls_ca_path: /path/to/ca
+
+    # The following flags are also available but are not required.
+    #    tls_cipher_suites: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+    #    tls_min_version: VersionTLS13
+    #    tls_server_name: distributor.example.com
+    #   tls_insecure_skip_verify: false
     admin_client:
      storage:
        type: s3
