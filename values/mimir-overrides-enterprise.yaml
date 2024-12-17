@@ -343,8 +343,9 @@ mimir:
   # certain YAML elements.
   structuredConfig:
     # admin_client storage configuration
-    instrumentation:
-      distributor_client:
+  gateway:
+    proxy:
+      distributor:
         tls_enabled: true
         tls_cert_path: /path/to/cert
         tls_key_path: /path/to/key
