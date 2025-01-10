@@ -98,7 +98,7 @@ image:
   # -- The Docker registry
   registry: docker.io
   # -- Docker image repository
-  repository: grafana/grafana
+  repository: grafana/grafana-enterprise
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -531,7 +531,7 @@ enableServiceLinks: true
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
 extraSecretMounts: {}
 #  - name: ge-license-grafana-prod 
-#    secretName: ge-license 
+#    secretName: ge- 
 #    mountPath: /etc/grafana/license
 #    readOnly: true
   # - name: secret-files
