@@ -94,15 +94,15 @@ livenessProbe:
 ##
 # schedulerName: "default-scheduler"
 
-image:
+####image:
   # -- The Docker registry
-  registry: docker.io
+####  registry: docker.io
   # -- Docker image repository
-  repository: grafana/grafana-enterprise
+####  repository: grafana/grafana-enterprise
   # Overrides the Grafana image tag whose default is the chart appVersion
-  tag: ""
-  sha: ""
-  pullPolicy: IfNotPresent
+####  tag: ""
+####  sha: ""
+####  pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
