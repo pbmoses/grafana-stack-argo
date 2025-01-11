@@ -98,9 +98,14 @@ image:
   # -- The Docker registry
   registry: docker.io
   # -- Docker image repository
-  repository: grafana/grafana-enterprise
+  repository: grafana/grafana
+  
+  #### for enterprise enable here
+  #### repository: grafana/grafana-enterprise
   # Overrides the Grafana image tag whose default is the chart appVersion
-  tag: "10.4.0"
+  #### To select specific version, set tag
+  ####tag: "10.4.0"
+  tag: ""
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -529,11 +534,13 @@ enableServiceLinks: true
 
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts: 
-  - name: ge-license
-    secretName: ge-license
-    mountPath: /etc/grafana/license
-    readOnly: true
+extraSecretMounts: {}
+### If running enterprise, create a secret for the license and mount it 
+####extraSecretMounts: 
+####  - name: ge-license
+####    secretName: ge-license
+####    mountPath: /etc/grafana/license
+####    readOnly: true
 
 #  - name: ge-license-grafana-prod 
 #    secretName: ge- 
@@ -801,8 +808,7 @@ grafana.ini:
   server:
     root_url: http://localhost:3000/
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ .Values.ingress.hosts | first }}{{ else }}''{{ end }}"
-  enterprise:
-    license_path: /etc/grafana/license/license.jwt
+
 #  enterprise:
 #    license_path: /etc/grafana/license/grafana-prod.jwt
 ## grafana Authentication can be enabled with the following values on grafana.ini
