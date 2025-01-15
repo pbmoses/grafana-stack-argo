@@ -611,7 +611,10 @@ lifecycleHooks: {}
 
 ## Pass the plugins you want installed as a list.
 ##
-plugins: {}
+plugins: 
+  ## added for testing ent. Remove if no enterprise
+  - https://grafana.com/api/plugins/grafana-metrics-enterprise-app/versions/5.1.2/download;grafana-metrics-enterprise-app
+  - https://grafana.com/api/plugins/grafana-enterprise-logs-app/versions/5.1.2/download;grafana-enterprise-logs-app
   # - digrich-bubblechart-panel
   # - grafana-clock-panel
   ## You can also use other plugin download URL, as long as they are valid zip files,
