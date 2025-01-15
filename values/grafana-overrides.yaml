@@ -534,7 +534,7 @@ enableServiceLinks: true
 
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts: {}
+extraSecretMounts: 
 ### If running enterprise, create a secret for the license and mount it 
 ####extraSecretMounts: 
   - name: ge-license
