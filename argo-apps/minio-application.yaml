@@ -13,8 +13,8 @@ spec:
       chart: minio
       helm:
         valueFiles:
-          - $values/manifests/gem-minio-overrides.yaml
-    - repoURL: https://github.com/pbmoses/ge-minio.git
+          - $values/values/minio-overrides.yaml
+    - repoURL: https://github.com/pbmoses/grafana-stack-argo.git 
       targetRevision: HEAD 
       ref: values
   project: default
