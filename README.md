@@ -1,4 +1,4 @@
-# THIS IS TEMPORARILY SET TO RUN ENTERPRISE METRICS, SET ENTERPRISE TO FALSE AND REMOVE LICENSE IF RUNNING IN OSS 
+# THIS IS TEMPORARILY SET TO RUN ENTERPRISE METRICS. SET ENTERPRISE TO FALSE AND REMOVE LICENSE IF RUNNING IN OSS 
 
 
 # This repo was created to deploy the Grafana Stack via Helm with custom values from ArgoCD utilizing multiple sources. This demo utilizes a GKE Autopilot cluster. 
