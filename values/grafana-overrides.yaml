@@ -105,7 +105,7 @@ image:
   # Overrides the Grafana image tag whose default is the chart appVersion
   #### To select specific version, set tag
   ####tag: "10.4.0"
-  tag: "10.4.0"
+  tag: "11.6.1"
   sha: ""
   pullPolicy: IfNotPresent
 
