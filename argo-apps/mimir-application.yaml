@@ -13,7 +13,7 @@ spec:
       chart: mimir-distributed 
       helm:
         valueFiles:
-          - $values/values/mimir-overrides-enterprise.yaml
+          - $values/values/mimir-overrides.yaml
     - repoURL: https://github.com/pbmoses/grafana-stack-argo.git 
       targetRevision: HEAD 
       ref: values
