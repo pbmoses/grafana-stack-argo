@@ -54,6 +54,7 @@ alertmanager:
     enabled: true
 
 compactor:
+  compactor_tenant_shard_size: 2
   persistentVolume:
     size: 10Gi
   resources:
@@ -64,6 +65,7 @@ compactor:
       memory: 1.5Gi
 
 distributor:
+  ingestion_tenant_shard_size: 2
   replicas: 2
   resources:
     limits:
@@ -136,6 +138,7 @@ overrides_exporter:
       memory: 128Mi
 
 querier:
+  shuffle_sharding_ingesters_enabled: true
   kedaAutoscaling:
     enabled: true
     # -- preserveReplicas gives you the option to migrate from non-autoscaled to autoscaled deployments without losing replicas. When set to true, the replica fields in the compo
@@ -243,6 +246,7 @@ query_frontend:
       memory: 2Gi
 
 ruler:
+  tenant_shuffle_shard_size: 2
   replicas: 1
   resources:
     limits:
@@ -252,6 +256,7 @@ ruler:
       memory: 2Gi
 
 store_gateway:
+  tenant_shard_size: 2
   persistentVolume:
     size: 10Gi
   replicas: 3
